@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatWave</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+
+<div id="landing-page">
+
+    <header>
+        <div class="container nav-bar">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg>
+                ChatWave
+            </div>
+            <div class="nav-btns">
+                <button class="btn btn-outline" onclick="openAuth('login')">Login</button>
+                <button class="btn btn-primary" onclick="openAuth('register')">Sign Up</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Ride the Wave of Conversation</h1>
+            <p>ChatWave is your new home for seamless, real-time communication. Connect with friends, family, and colleagues instantly.</p>
+            <button class="btn btn-primary btn-large" onclick="openAuth('register')">Get Started</button>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="features-header">
+                <span class="tag">Key Features</span>
+                <h2>Why Choose ChatWave?</h2>
+                <p>We provide a feature-rich, secure, and blazing fast chatting experience.</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <div class="card-icon">⚡</div>
+                    <h3>Real-Time Messaging</h3>
+                    <p>Instantly send and receive messages in one-on-one or group chats with our low-latency infrastructure.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🛡️</div>
+                    <h3>Content Moderation</h3>
+                    <p>Our intelligent AI-powered filter keeps conversations safe and respectful by moderating abusive language.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">↺</div>
+                    <h3>Chat History</h3>
+                    <p>Never lose a memory. Easily load and browse your past conversations with our efficient pagination.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 ChatWave. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+
+
+<div id="auth-wrapper" class="hidden">
+    <div class="login-card">
+        <div class="login-logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg>
+            ChatWave
+        </div>
+
+        <h2 id="auth-title">Welcome Back</h2>
+        <p id="auth-subtitle">Sign in to your account to continue.</p>
+
+        <div class="input-group" id="name-group" style="display: none;">
+            <label>Display Name</label>
+            <input type="text" id="username" placeholder="John Doe" />
+        </div>
+
+        <div class="input-group">
+            <label id="login-label">Username</label>
+            <input type="text" id="login-username" placeholder="Enter your username" />
+        </div>
+
+        <div class="input-group" id="email-group" style="display: none;">
+            <label>Email</label>
+            <input type="email" id="email" placeholder="m@example.com" />
+        </div>
+
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="••••••••" />
+        </div>
+
+        <button id="auth-btn" onclick="handleAuth()">Login</button>
+
+        <p class="toggle-link" onclick="toggleAuthMode()">
+            <span id="toggle-text">Don't have an account? Register</span>
+        </p>
+        <p id="login-error" class="error-msg hidden"></p>
+    </div>
+</div>
+
+<div id="dashboard-screen" class="hidden">
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="user-profile">
+                <div class="avatar-circle">You</div>
+                <span id="display-username">User</span>
+            </div>
+            <div class="sidebar-actions">
+                <button onclick="startNewChat()" title="New Chat">+</button>
+                <button onclick="logout()" title="Logout">🚪</button>
+            </div>
+        </div>
+        <div id="chat-list" class="chat-list">
+            <p class="welcome-msg">Loading chats...</p>
+        </div>
+    </div>
+
+    <div class="chat-area">
+        <div class="chat-header">
+            <button id="mobile-back-btn" onclick="showChatList()" class="hidden">⬅</button>
+            <div class="chat-header-info">
+                <span id="current-chat-name">Select a chat</span>
+                <button id="add-member-btn" class="btn-outline hidden" onclick="showAddMemberModal()" style="font-size: 12px; padding: 5px 10px; margin-left: 10px;">+ Add User</button>
+            </div>
+        </div>
+
+        <div id="messages-list" class="messages-list">
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="message-input" placeholder="Type a message..." disabled onkeypress="handleKeyPress(event)" />
+            <button id="send-btn" onclick="sendMessage()" disabled>Send</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-overlay" class="modal-overlay hidden">
+
+    <div id="modal-selection" class="modal-card">
+        <h3>Start New Conversation</h3>
+        <p>Who do you want to talk to?</p>
+        <div class="modal-actions">
+            <button class="btn btn-primary" onclick="showPrivateModal()">Private Chat</button>
+            <button class="btn btn-outline" onclick="showGroupModal()">Group Chat</button>
+        </div>
+        <button class="close-btn" onclick="closeModal()">×</button>
+    </div>
+
+    <div id="modal-private" class="modal-card hidden">
+        <h3>New Private Chat</h3>
+        <div class="input-group">
+            <label>Enter Username</label>
+            <input type="text" id="private-username" placeholder="e.g. jane_doe">
+        </div>
+        <button class="btn btn-primary" style="width: 100%" onclick="createPrivateChat()">Start Chat</button>
+        <button class="text-btn" onclick="backToSelection()">Back</button>
+    </div>
+
+    <div id="modal-group" class="modal-card hidden">
+        <h3>Create New Group</h3>
+
+        <div class="input-group">
+            <label>Group Name</label>
+            <input type="text" id="group-name" placeholder="e.g. Weekend Plan">
+        </div>
+
+        <div class="input-group">
+            <label>Add Participants (Username)</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="group-user-input" placeholder="Enter username">
+                <button class="btn btn-outline" onclick="addGroupParticipant()">Add</button>
+            </div>
+        </div>
+
+        <div id="group-participants-list" class="participants-list">
+        </div>
+        <p class="hint-text">Minimum 3 participants required (including you).</p>
+
+        <button class="btn btn-primary" style="width: 100%" onclick="submitGroupChat()">Create Group</button>
+        <button class="text-btn" onclick="backToSelection()">Back</button>
+    </div>
+
+    <div id="modal-add-member" class="modal-card hidden">
+        <h3>Add to Group</h3>
+        <p>Enter the username to add to this group.</p>
+        <div class="input-group">
+            <input type="text" id="add-member-username" placeholder="Username">
+        </div>
+        <button class="btn btn-primary" style="width: 100%" onclick="submitAddMember()">Add</button>
+        <button class="text-btn" onclick="closeModal()">Cancel</button>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

@@ -35,13 +35,15 @@ Instant delivery using WebSocket + STOMP.
 
 Create dynamic chat rooms and broadcast to shared topics.
 
-### 💾 Cloud Persistence
+### 🛡️ High-Performance Content Moderation
+Uses the **Aho-Corasick Algorithm** (Trie-based) to instantly filter prohibited words in O(N) time, ensuring a safe and respectful environment.
 
-MongoDB Atlas stores all chat history securely.
+### 💾 Cloud Persistence
+MongoDB Atlas stores all chat history securely, ensuring no message is ever lost.
 
 ### 🎨 Responsive UI
+Modern, WhatsApp-inspired layout with premium SVG icons for a sleek user experience.
 
-WhatsApp-inspired layout using Flexbox & Grid.
 
 ------------------------------------------------------------------------
 
@@ -141,9 +143,9 @@ Messages tagged with `@bot` trigger an LLM response.
 -   Role-based access
 -   Protect private queues `/user/{id}/queue`
 
-### 4. 🌳 Trie-Based Profanity Filter
+### 4. 🖼️ Media Sharing
+Allow users to upload and preview images using cloud storage (S3/Cloudinary).
 
-Replaces slow regex filtering with **O(L)** prefix-tree scanning.
 
 ------------------------------------------------------------------------
 
@@ -170,7 +172,7 @@ Edit `application.properties`:
 
 ### **5. Open in Browser**
 
-    http://localhost:8080
+    http://localhost:8090
 
 ------------------------------------------------------------------------
 

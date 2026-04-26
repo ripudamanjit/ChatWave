@@ -238,8 +238,10 @@ footer {
 .sidebar-actions button {
     background: transparent; border: none; color: var(--text-muted);
     font-size: 18px; cursor: pointer; margin-left: 10px;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: 0.2s;
 }
-.sidebar-actions button:hover { color: white; }
+.sidebar-actions button:hover { color: var(--text-accent); transform: scale(1.1); }
 
 .chat-list { flex: 1; overflow-y: auto; }
 
@@ -362,11 +364,18 @@ footer {
 
       /* Show back button ONLY on mobile */
       #mobile-back-btn {
-          display: inline-block; /* Overrides the global 'display: none' */
-          margin-right: 10px;
-          background: none; border: none;
-          color: var(--text-main); font-size: 20px; cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 15px;
+          background: var(--bg-input);
+          border: 1px solid var(--border);
+          border-radius: 50%;
+          width: 36px; height: 36px;
+          color: var(--text-main); cursor: pointer;
+          transition: 0.2s;
       }
+      #mobile-back-btn:hover { background-color: var(--primary); border-color: var(--primary); }
   }
 
 
